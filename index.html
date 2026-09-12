@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Agribank Chi nhánh Phú Thọ • Cổng Quản trị & Tiện ích Hồ sơ</title>
+  
+  <!-- Agribank Theme Stylesheet -->
+  <link rel="stylesheet" href="css/agribank-theme.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Hardware & Document Libraries -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="brand-container">
+      <button class="menu-toggle-btn" id="mobile-menu-btn" title="Mở danh mục">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="brand-logo">A</div>
+      <div class="brand-title-group">
+        <h1>AGRIBANK CHI NHÁNH PHÚ THỌ</h1>
+        <p>Hệ thống Quản trị & Khai thác Hồ sơ Cán bộ</p>
+      </div>
+    </div>
+    
+    <div class="nav-actions">
+      <div class="user-badge" id="nav-user-badge">
+        <div class="user-avatar" id="nav-user-avatar">A</div>
+        <div>
+          <div style="font-weight: 700; line-height: 1.2;" id="nav-user-name">Cán bộ Agribank</div>
+          <div style="font-size: 0.72rem; color: var(--agri-gold);" id="nav-user-role">Cán bộ Nghiệp vụ</div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary btn-sm" id="theme-toggle-btn" title="Đổi giao diện Dark/Light">
+        <i data-lucide="sun"></i>
+      </button>
+
+      <button class="btn btn-secondary btn-sm" onclick="AuthManager.lockScreen()" title="Khóa màn hình làm việc">
+        <i data-lucide="lock"></i>
+      </button>
+
+      <button class="btn btn-danger btn-sm" onclick="AuthManager.logout()" title="Đăng xuất khỏi hệ thống">
+        <i data-lucide="log-out"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Layout -->
+  <div class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-heading">Nghiệp vụ Chính</div>
+      <a href="#" class="nav-item active" data-tab="scanner-tab">
+        <i data-lucide="qr-code"></i> Quét QR & Lập Hồ Sơ
+      </a>
+      <a href="#" class="nav-item" data-tab="records-tab">
+        <i data-lucide="folder-kanban"></i> Quản lý Hồ sơ KH
+      </a>
+
+      <div class="sidebar-heading" style="margin-top: 1rem;">Quản trị Biểu mẫu & Hệ thống</div>
+      <a href="#" class="nav-item" data-tab="templates-tab">
+        <i data-lucide="file-cog"></i> Danh mục Biểu mẫu
+      </a>
+      <a href="#" class="nav-item" data-tab="users-tab">
+        <i data-lucide="users"></i> Quản trị Người dùng
+      </a>
+      <a href="#" class="nav-item" data-tab="audit-tab">
+        <i data-lucide="shield-check"></i> Nhật ký Truy vết
+      </a>
+      <a href="#" class="nav-item" data-tab="future-tab">
+        <i data-lucide="line-chart"></i> Báo cáo & Thống kê KPI
+      </a>
+
+      <div style="margin-top: auto; padding: 0.85rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--bg-card-border);">
+        <div style="font-size: 0.75rem; color: var(--agri-gold); font-weight: 700; margin-bottom: 0.2rem;">
+          <i data-lucide="building-2"></i> ĐƠN VỊ SỬ DỤNG
+        </div>
+        <div style="font-size: 0.8rem; font-weight: 600;" id="nav-user-unit">Chi nhánh Phú Thọ</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Statistics Dashboard Grid -->
+      <section class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3 id="stat-total-records">0</h3>
+            <p>Hồ sơ đã quét & lưu trữ</p>
+          </div>
+          <div class="stat-icon"><i data-lucide="file-check"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3 id="stat-total-users">4</h3>
+            <p>Cán bộ sử dụng hệ thống</p>
+          </div>
+          <div class="stat-icon" style="color: #60a5fa; background: rgba(59, 130, 246, 0.15);"><i data-lucide="user-check"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Web Print</h3>
+            <p id="printer-status-text">Kết nối Bluetooth & A4</p>
+          </div>
+          <div class="stat-icon" style="color: #4ade80; background: rgba(0, 104, 56, 0.15);"><i data-lucide="printer"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>AES-256</h3>
+            <p>Mã hóa dữ liệu nội bộ</p>
+          </div>
+          <div class="stat-icon" style="color: var(--agri-gold); background: rgba(212, 175, 55, 0.15);"><i data-lucide="shield"></i></div>
+        </div>
+      </section>
+
+      <!-- TAB 1: SCANNER & INTAKE PANEL -->
+      <section id="scanner-tab" class="tab-panel">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="scan"></i> Thao tác Khai thác & Quét mã CCCD</div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="AppController.openModal('camera-scan-modal'); HardwareManager.startQrScanner('qr-reader-viewport', (data) => { CustomerManager.addOrUpdateRecord(data); AppController.renderCustomerRecords(); AppController.updateStats(); alert('Đã quét thành công CCCD: ' + data.fullName); AppController.closeModal('camera-scan-modal'); });">
+              <i data-lucide="camera"></i> Camera Quét QR CCCD
+            </button>
+
+            <button class="btn btn-gold" onclick="AppController.runSampleScan()">
+              <i data-lucide="zap"></i> Quét Mẫu (Test PC)
+            </button>
+
+            <button class="btn btn-secondary" onclick="HardwareManager.connectBluetoothPrinter().then(name => alert('Đã kết nối máy in Bluetooth: ' + name)).catch(e => alert(e.message))">
+              <i data-lucide="bluetooth"></i> Kết nối Máy in Bluetooth
+            </button>
+
+            <button class="btn btn-green" onclick="TemplateManager.exportToExcel(CustomerManager.getRecords())">
+              <i data-lucide="file-spreadsheet"></i> Xuất Danh Sách Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Records Preview Panel -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="history"></i> Hồ sơ vừa tiếp nhận mới nhất</div>
+            <button class="btn btn-secondary btn-sm" id="toggle-unmask-btn" onclick="AppController.toggleDataUnmask()">
+              <i data-lucide="eye"></i> Mở khóa xem đầy đủ
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Họ và Tên Khách hàng</th>
+                  <th>Số CCCD gắn chip</th>
+                  <th>Ngày sinh</th>
+                  <th>Giới tính</th>
+                  <th>Số Điện Thoại</th>
+                  <th>Trạng Thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="customer-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: RECORDS MANAGEMENT -->
+      <section id="records-tab" class="tab-panel" style="display: none;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="folder-open"></i> Toàn bộ Hồ sơ Khách hàng đã lưu trữ</div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Dữ liệu hồ sơ được mã hóa và quản lý tập trung theo quy định bảo mật thông tin của Agribank Chi nhánh Phú Thọ.
+          </p>
+        </div>
+      </section>
+
+      <!-- TAB 3: ADMIN TEMPLATES MANAGEMENT -->
+      <section id="templates-tab" class="tab-panel" style="display: none;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="file-cog"></i> Quản lý Danh mục Mẫu Biểu Hồ sơ Agribank</div>
+            <button class="btn btn-primary btn-sm" onclick="AppController.openEditTemplateModal()">
+              <i data-lucide="file-plus"></i> Thêm Mẫu Biểu Mới
+            </button>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+            Quản trị viên (Admin) có thể dễ dàng thêm, sửa hoặc cập nhật danh mục mẫu biểu ngân hàng khi Agribank ban hành quy định thay đổi biểu mẫu mới.
+          </p>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Mã Biểu Mẫu</th>
+                  <th>Tên Biểu Mẫu Hồ Sơ</th>
+                  <th>Phân Loại</th>
+                  <th>Trạng Thái</th>
+                  <th>Cập Nhật Lần Cuối</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="templates-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: USER MANAGEMENT (ADMIN ONLY) -->
+      <section id="users-tab" class="tab-panel" style="display: none;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="user-cog"></i> Quản lý Cán bộ & Phân quyền Truy cập</div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Cán bộ Agribank</th>
+                  <th>Tài khoản</th>
+                  <th>Vai trò (Role)</th>
+                  <th>Đơn vị / PGD</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: SYSTEM AUDIT LOGS -->
+      <section id="audit-tab" class="tab-panel" style="display: none;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="shield-alert"></i> Nhật ký Truy vết Hoạt động Hệ thống (Audit Logs)</div>
+            <button class="btn btn-danger btn-sm" onclick="AuditManager.clearLogs(); AppController.renderAuditLogs();">
+              <i data-lucide="trash-2"></i> Dọn dẹp nhật ký
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Thời gian</th>
+                  <th>Cán bộ thực hiện</th>
+                  <th>Hành vi (Action)</th>
+                  <th>Chi tiết tác vụ</th>
+                  <th>Đơn vị tác nghiệp</th>
+                </tr>
+              </thead>
+              <tbody id="audit-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: BRANCH PERFORMANCE & KPI STATISTICS -->
+      <section id="future-tab" class="tab-panel" style="display: none;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="line-chart"></i> Báo cáo & Thống kê Hoạt động Chi nhánh Phú Thọ</div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+            Thống kê trực quan số lượng hồ sơ tiếp nhận, kết quả quét CCCD và tiến độ xử lý của từng Phòng giao dịch.
+          </p>
+
+          <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+            <div class="glass-panel" style="margin: 0;">
+              <div style="font-size: 1.5rem; color: var(--agri-gold); margin-bottom: 0.5rem;"><i data-lucide="trending-up"></i></div>
+              <h4>Tổng Số Hồ Sơ Khai Thác</h4>
+              <p style="font-size: 1.8rem; font-weight: 800; color: var(--agri-gold); margin: 0.5rem 0;">100%</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Tỷ lệ bóc tách dữ liệu CCCD chính xác cao.</p>
+            </div>
+
+            <div class="glass-panel" style="margin: 0;">
+              <div style="font-size: 1.5rem; color: var(--agri-green-light); margin-bottom: 0.5rem;"><i data-lucide="check-circle-2"></i></div>
+              <h4>Đơn Vị Xuất Sắc</h4>
+              <p style="font-size: 1.2rem; font-weight: 700; color: #4ade80; margin: 0.5rem 0;">PGD Hùng Vương</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Dẫn đầu số lượng lập hồ sơ trong tháng.</p>
+            </div>
+
+            <div class="glass-panel" style="margin: 0;">
+              <div style="font-size: 1.5rem; color: #60a5fa; margin-bottom: 0.5rem;"><i data-lucide="clock"></i></div>
+              <h4>Thời Gian Xử Lý Trung Bình</h4>
+              <p style="font-size: 1.8rem; font-weight: 800; color: #60a5fa; margin: 0.5rem 0;">15 Giây</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Rút ngắn 90% thời gian gõ hồ sơ thủ công.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL 1: LOGIN SCREEN -->
+  <div id="login-screen-modal" class="modal-backdrop show">
+    <div class="modal-content" style="max-width: 420px; text-align: center;">
+      <div class="brand-logo" style="margin: 0 auto 1rem auto; width: 56px; height: 56px; font-size: 2rem;">A</div>
+      <h2 style="color: var(--agri-gold); font-size: 1.3rem; margin-bottom: 0.2rem;">AGRIBANK PHÚ THỌ</h2>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Cổng Quản trị & Tiện ích Khai thác Hồ sơ</p>
+
+      <form onsubmit="event.preventDefault(); const u = document.getElementById('login-username').value; const p = document.getElementById('login-password').value; AuthManager.login(u, p).then(() => window.location.reload()).catch(err => alert(err.message));">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Tài khoản Cán bộ</label>
+          <input type="text" id="login-username" class="form-control" placeholder="Nhập username..." value="admin" required>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Mật khẩu</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." value="admin123" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">
+          <i data-lucide="log-in"></i> ĐĂNG NHẬP HỆ THỐNG
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: LOCK SCREEN -->
+  <div id="lock-screen-modal" class="lock-screen" style="display: none;">
+    <div class="brand-logo" style="width: 64px; height: 64px; font-size: 2.2rem; margin-bottom: 1rem;">A</div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.3rem;">MÀN HÌNH ĐÃ KHÓA BẢO VỆ</h2>
+    <p style="color: var(--agri-gold); margin-bottom: 0.3rem;" id="lock-username">Cán bộ Agribank</p>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;" id="lock-unit">Chi nhánh Phú Thọ</p>
+
+    <div style="width: 100%; max-width: 320px;">
+      <input type="password" id="lock-password-input" class="form-control" placeholder="Nhập mật khẩu để mở khóa..." style="text-align: center; margin-bottom: 1rem;">
+      <button class="btn btn-gold" style="width: 100%;" onclick="AuthManager.unlockScreen(document.getElementById('lock-password-input').value).then(ok => { if(!ok) alert('Mật khẩu không đúng!'); })">
+        MỞ KHÓA LÀM VIỆC
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CAMERA SCANNER -->
+  <div id="camera-scan-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i data-lucide="qr-code"></i> Quét Mã QR CCCD Qua Camera</h3>
+        <button class="btn btn-secondary btn-sm" onclick="AppController.closeModal('camera-scan-modal')">✕</button>
+      </div>
+      <div id="qr-reader-viewport" style="width: 100%; min-height: 300px; background: #000; border-radius: 8px;"></div>
+      <p style="text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 1rem;">
+        Đưa mã QR trên mặt trước CCCD gắn chip vào trong khung hình để hệ thống tự động bóc tách thông tin.
+      </p>
+    </div>
+  </div>
+
+  <!-- MODAL 4: EDIT/ADD DOCUMENT TEMPLATE (ADMIN ONLY) -->
+  <div id="edit-template-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i data-lucide="file-cog"></i> Cập Nhật Biểu Mẫu Hồ Sơ (Admin)</h3>
+        <button class="btn btn-secondary btn-sm" onclick="AppController.closeModal('edit-template-modal')">✕</button>
+      </div>
+      <form onsubmit="event.preventDefault(); AppController.saveTemplateForm();">
+        <input type="hidden" id="edit-tpl-id">
+        <div class="form-group">
+          <label class="form-label">Mã Biểu Mẫu (VD: AGR-BM01, AGR-BM04)</label>
+          <input type="text" id="edit-tpl-code" class="form-control" required placeholder="Nhập mã biểu mẫu...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên Biểu Mẫu Hồ Sơ</label>
+          <input type="text" id="edit-tpl-title" class="form-control" required placeholder="Nhập tên biểu mẫu hồ sơ...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phân Loại Biểu Mẫu</label>
+          <select id="edit-tpl-category" class="form-control">
+            <option value="Tài khoản & Thẻ">Tài khoản & Thẻ</option>
+            <option value="Ngân hàng số">Ngân hàng số</option>
+            <option value="Hồ sơ Khách hàng">Hồ sơ Khách hàng</option>
+            <option value="Tín dụng">Tín dụng</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mô Tả Hướng Dẫn Kèm Theo</label>
+          <textarea id="edit-tpl-desc" class="form-control" rows="3" placeholder="Nhập ghi chú hoặc mô tả mẫu biểu..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          <i data-lucide="save"></i> LƯU BIỂU MẪU HỒ SƠ
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: PRINT PREVIEW MODAL -->
+  <div id="print-preview-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 850px;">
+      <div class="modal-header">
+        <h3><i data-lucide="printer"></i> Xem Trước & In Biểu Mẫu Agribank A4</h3>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary btn-sm" onclick="AppController.printActivePreview()">
+            <i data-lucide="printer"></i> Ra Lệnh In A4
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="AppController.closeModal('print-preview-modal')">✕</button>
+        </div>
+      </div>
+      <div id="print-preview-body" style="background: #fff; color: #000; padding: 1.5rem; border-radius: 8px; max-height: 70vh; overflow-y: auto;">
+        <!-- Rendered A4 Template -->
+      </div>
+    </div>
+  </div>
+
+  <!-- App Core JavaScript Modules -->
+  <script src="js/auth.js"></script>
+  <script src="js/hardware.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Create icons on load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
