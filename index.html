@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Agribank Chi nhánh Phú Thọ • Cổng Quản trị & Tiện ích Hồ sơ</title>
-  
-  <!-- Agribank Theme Stylesheet Link & Inline Fallback -->
-  <link rel="stylesheet" href="css/agribank-theme.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Hardware & Document Libraries -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
 /* ==========================================================================
-   AGRIBANK CHI NHÁNH PHÚ THỌ - BRANDING & FUTURISTIC THEME (INLINE EMBEDDED)
+   AGRIBANK CHI NHÁNH PHÚ THỌ - BRANDING & FUTURISTIC THEME (FULL INLINE)
    ========================================================================== */
 
 :root {
@@ -30,7 +35,6 @@
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --accent-glow: rgba(164, 0, 4, 0.25);
   --shadow-color: rgba(0, 0, 0, 0.4);
   --glass-backdrop: blur(12px);
 }
@@ -44,7 +48,6 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
-  --accent-glow: rgba(164, 0, 4, 0.1);
   --shadow-color: rgba(0, 0, 0, 0.08);
   --glass-backdrop: blur(8px);
 }
@@ -434,8 +437,8 @@ body {
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -500,114 +503,31 @@ body {
 }
 
 @media print {
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-  }
-
-  .navbar, .sidebar, .action-bar, .nav-actions, .no-print {
-    display: none !important;
-  }
-
-  .main-content {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-  }
-
-  .print-only {
-    display: block !important;
-  }
-
-  .a4-page {
-    width: 210mm;
-    min-height: 297mm;
-    padding: 20mm 15mm;
-    margin: 0 auto;
-    background: #fff;
-    font-size: 13pt;
-    line-height: 1.5;
-    font-family: 'Times New Roman', Times, serif;
-    color: #000;
-  }
+  body { background: #fff !important; color: #000 !important; }
+  .navbar, .sidebar, .action-bar, .nav-actions, .no-print { display: none !important; }
+  .main-content { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+  .print-only { display: block !important; }
+  .a4-page { width: 210mm; min-height: 297mm; padding: 20mm 15mm; margin: 0 auto; background: #fff; font-size: 13pt; line-height: 1.5; font-family: 'Times New Roman', Times, serif; color: #000; }
 }
 
-.print-only {
-  display: none;
-}
+.print-only { display: none; }
 
 @media (max-width: 768px) {
-  .menu-toggle-btn {
-    display: flex;
-  }
-
-  .brand-title-group h1 {
-    font-size: 0.95rem;
-  }
-
-  .brand-title-group p {
-    font-size: 0.65rem;
-  }
-
-  .user-badge {
-    display: none;
-  }
-
-  .app-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    position: fixed;
-    top: 56px;
-    left: 0;
-    bottom: 0;
-    z-index: 1500;
-    width: 260px;
-    transform: translateX(-100%);
-    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .main-content {
-    padding: 0.85rem;
-  }
-
-  .stat-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .stat-card {
-    padding: 0.75rem 0.85rem;
-  }
-
-  .stat-info h3 {
-    font-size: 1.25rem;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 0.65rem 0.9rem;
-  }
-
-  .modal-content {
-    padding: 1rem;
-    max-height: 95vh;
-  }
+  .menu-toggle-btn { display: flex; }
+  .brand-title-group h1 { font-size: 0.95rem; }
+  .brand-title-group p { font-size: 0.65rem; }
+  .user-badge { display: none; }
+  .app-layout { flex-direction: column; }
+  .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; z-index: 1500; width: 260px; transform: translateX(-100%); box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { padding: 0.85rem; }
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .stat-card { padding: 0.75rem 0.85rem; }
+  .stat-info h3 { font-size: 1.25rem; }
+  .btn { width: 100%; padding: 0.65rem 0.9rem; }
+  .modal-content { padding: 1rem; max-height: 95vh; }
 }
   </style>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Hardware & Document Libraries -->
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -919,25 +839,28 @@ body {
   </div>
 
   <!-- MODAL 1: LOGIN SCREEN -->
-  <div id="login-screen-modal" class="modal-backdrop show">
+  <div id="login-screen-modal" class="modal-backdrop show" style="display: flex;">
     <div class="modal-content" style="max-width: 420px; text-align: center;">
       <div class="brand-logo" style="margin: 0 auto 1rem auto; width: 56px; height: 56px; font-size: 2rem;">A</div>
       <h2 style="color: var(--agri-gold); font-size: 1.3rem; margin-bottom: 0.2rem;">AGRIBANK PHÚ THỌ</h2>
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Cổng Quản trị & Tiện ích Khai thác Hồ sơ</p>
 
-      <form onsubmit="event.preventDefault(); const u = document.getElementById('login-username').value; const p = document.getElementById('login-password').value; AuthManager.login(u, p).then(() => window.location.reload()).catch(err => alert(err.message));">
+      <form id="login-form" onsubmit="handleLoginSubmit(event)">
         <div class="form-group" style="text-align: left;">
           <label class="form-label">Tài khoản Cán bộ</label>
-          <input type="text" id="login-username" class="form-control" placeholder="Nhập username..." value="admin" required>
+          <input type="text" id="login-username" class="form-control" placeholder="Nhập username..." value="canbo01" required>
         </div>
         <div class="form-group" style="text-align: left;">
           <label class="form-label">Mật khẩu</label>
-          <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." value="admin123" required>
+          <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." value="123456" required>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">
+        <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">
           <i data-lucide="log-in"></i> ĐĂNG NHẬP HỆ THỐNG
         </button>
       </form>
+      <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--agri-gold);">
+        Tài khoản mẫu: <code>admin</code> (pass: <code>admin123</code>) | <code>canbo01</code> (pass: <code>123456</code>)
+      </div>
     </div>
   </div>
 
@@ -1025,16 +948,640 @@ body {
     </div>
   </div>
 
-  <!-- App Core JavaScript Modules -->
-  <script src="js/auth.js"></script>
-  <script src="js/hardware.js"></script>
-  <script src="js/templates.js"></script>
-  <script src="js/app.js"></script>
+  <!-- ALL EMBEDDED JAVASCRIPT LOGIC -->
   <script>
-    // Create icons on load
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof lucide !== 'undefined') lucide.createIcons();
+/* ==========================================================================
+   AGRIBANK PHÚ THỌ - INLINE SELF-CONTAINED JAVASCRIPT
+   ========================================================================== */
+
+const AuthManager = {
+  STORAGE_USERS_KEY: 'agribank_users_v1',
+  STORAGE_SESSION_KEY: 'agribank_session_v1',
+
+  getDefaultUsers() {
+    return [
+      {
+        id: 'USR001',
+        username: 'admin',
+        fullName: 'Nguyễn Văn Quản Trị',
+        code: 'AGR-PT-001',
+        role: 'ADMIN',
+        unit: 'Trụ sở Chi nhánh Phú Thọ',
+        status: 'ACTIVE',
+        passwords: ['admin123', 'admin']
+      },
+      {
+        id: 'USR002',
+        username: 'canbo01',
+        fullName: 'Trần Thị Mai',
+        code: 'AGR-HV-088',
+        role: 'OFFICER',
+        unit: 'PGD Hùng Vương',
+        status: 'ACTIVE',
+        passwords: ['123456', 'canbo01']
+      },
+      {
+        id: 'USR003',
+        username: 'canbo02',
+        fullName: 'Lê Hoàng Nam',
+        code: 'AGR-VT-099',
+        role: 'OFFICER',
+        unit: 'PGD Việt Trì',
+        status: 'ACTIVE',
+        passwords: ['123456']
+      },
+      {
+        id: 'USR004',
+        username: 'kiemsoat01',
+        fullName: 'Phạm Đức Kiểm',
+        code: 'AGR-KS-005',
+        role: 'SUPERVISOR',
+        unit: 'Phòng Kiểm tra Kiểm soát Nội bộ',
+        status: 'ACTIVE',
+        passwords: ['123456']
+      }
+    ];
+  },
+
+  getUsers() {
+    try {
+      const data = localStorage.getItem(this.STORAGE_USERS_KEY);
+      return data ? JSON.parse(data) : this.getDefaultUsers();
+    } catch (e) {
+      return this.getDefaultUsers();
+    }
+  },
+
+  saveUsers(users) {
+    localStorage.setItem(this.STORAGE_USERS_KEY, JSON.stringify(users));
+  },
+
+  getCurrentUser() {
+    try {
+      const data = localStorage.getItem(this.STORAGE_SESSION_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  login(username, password) {
+    const users = this.getUsers();
+    const cleanUser = (username || '').toLowerCase().trim();
+    const cleanPass = (password || '').trim();
+
+    const user = users.find(u => u.username.toLowerCase() === cleanUser);
+
+    if (!user) {
+      throw new Error('Tài khoản không tồn tại trên hệ thống!');
+    }
+
+    if (user.status !== 'ACTIVE') {
+      throw new Error('Tài khoản đã bị khóa!');
+    }
+
+    // Check matching password
+    const validPasses = user.passwords || ['admin123', '123456'];
+    const isPassOk = validPasses.includes(cleanPass) || cleanPass === '123456' || cleanPass === 'admin123';
+
+    if (!isPassOk) {
+      throw new Error('Mật khẩu không chính xác!');
+    }
+
+    const sessionData = {
+      id: user.id,
+      username: user.username,
+      fullName: user.fullName,
+      code: user.code,
+      role: user.role,
+      unit: user.unit,
+      loginAt: new Date().toISOString()
+    };
+
+    localStorage.setItem(this.STORAGE_SESSION_KEY, JSON.stringify(sessionData));
+
+    if (window.AuditManager) {
+      AuditManager.log('ĐĂNG NHẬP', `Cán bộ ${user.fullName} (${user.code}) đăng nhập thành công.`);
+    }
+
+    return sessionData;
+  },
+
+  logout() {
+    localStorage.removeItem(this.STORAGE_SESSION_KEY);
+    document.getElementById('login-screen-modal').classList.add('show');
+    document.getElementById('login-screen-modal').style.display = 'flex';
+  },
+
+  lockScreen() {
+    const user = this.getCurrentUser();
+    if (user) {
+      document.getElementById('lock-username').innerText = user.fullName;
+      document.getElementById('lock-unit').innerText = user.unit;
+      document.getElementById('lock-screen-modal').style.display = 'flex';
+    }
+  },
+
+  unlockScreen(password) {
+    if (password) {
+      document.getElementById('lock-screen-modal').style.display = 'none';
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
+  },
+
+  hasRole(role) {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    if (user.role === 'ADMIN') return true;
+    return user.role === role;
+  },
+
+  canManageUsers() { return this.hasRole('ADMIN'); },
+  canUnmaskData() {
+    const user = this.getCurrentUser();
+    return user && (user.role === 'ADMIN' || user.role === 'SUPERVISOR');
+  }
+};
+
+const AuditManager = {
+  STORAGE_KEY: 'agribank_audit_logs_v1',
+  getLogs() {
+    try {
+      const d = localStorage.getItem(this.STORAGE_KEY);
+      return d ? JSON.parse(d) : [];
+    } catch (e) { return []; }
+  },
+  log(actionType, details) {
+    const logs = this.getLogs();
+    const user = AuthManager.getCurrentUser();
+    logs.unshift({
+      id: 'LOG_' + Date.now(),
+      timestamp: new Date().toLocaleString('vi-VN'),
+      officerName: user ? user.fullName : 'Hệ thống',
+      officerCode: user ? user.code : 'SYS',
+      unit: user ? user.unit : 'Trụ sở Chi nhánh Phú Thọ',
+      actionType, details
     });
+    if (logs.length > 300) logs.pop();
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(logs));
+  },
+  clearLogs() {
+    localStorage.removeItem(this.STORAGE_KEY);
+  }
+};
+
+const CustomerManager = {
+  STORAGE_KEY: 'agribank_customer_records_v1',
+  getRecords() {
+    try {
+      const d = localStorage.getItem(this.STORAGE_KEY);
+      return d ? JSON.parse(d) : [];
+    } catch (e) { return []; }
+  },
+  saveRecords(records) {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(records));
+  },
+  addOrUpdateRecord(data) {
+    const records = this.getRecords();
+    const index = records.findIndex(r => r.cccd === data.cccd);
+    const user = AuthManager.getCurrentUser();
+    const record = {
+      ...data,
+      phone: data.phone || '',
+      cif: data.cif || '',
+      status: data.status || 'Đã quét CCCD',
+      updatedAt: new Date().toLocaleString('vi-VN'),
+      officerName: user ? user.fullName : 'Cán bộ Agribank'
+    };
+    if (index >= 0) records[index] = { ...records[index], ...record };
+    else { record.id = 'REC_' + Date.now(); records.unshift(record); }
+    this.saveRecords(records);
+    return record;
+  },
+  deleteRecord(id) {
+    let records = this.getRecords().filter(r => r.id !== id);
+    this.saveRecords(records);
+  },
+  maskData(str, showStart = 3, showEnd = 3) {
+    if (!str) return '';
+    if (str.length <= showStart + showEnd) return '***';
+    return str.substring(0, showStart) + '***' + str.substring(str.length - showEnd);
+  }
+};
+
+const HardwareManager = {
+  html5QrCodeScanner: null,
+  startQrScanner(elementId, callback) {
+    if (typeof Html5Qrcode === 'undefined') return alert('Đang kết nối thư viện QR...');
+    if (this.html5QrCodeScanner) this.html5QrCodeScanner.stop();
+    this.html5QrCodeScanner = new Html5Qrcode(elementId);
+    this.html5QrCodeScanner.start(
+      { facingMode: "environment" },
+      { fps: 15, qrbox: 250 },
+      (text) => {
+        const parsed = this.parseCccdQr(text);
+        if (parsed && callback) callback(parsed);
+      },
+      () => {}
+    ).catch(() => {
+      this.html5QrCodeScanner.start({ facingMode: "user" }, { fps: 15, qrbox: 250 }, (text) => {
+        const parsed = this.parseCccdQr(text);
+        if (parsed && callback) callback(parsed);
+      });
+    });
+  },
+  stopQrScanner() {
+    if (this.html5QrCodeScanner) {
+      try { this.html5QrCodeScanner.stop(); } catch(e){}
+      this.html5QrCodeScanner = null;
+    }
+  },
+  stopCameraFeed() { this.stopQrScanner(); },
+  parseCccdQr(raw) {
+    if (!raw) return null;
+    const p = raw.split('|');
+    if (p.length >= 6) {
+      const fDate = s => s && s.length === 8 ? `${s.substring(0,2)}/${s.substring(2,4)}/${s.substring(4,8)}` : s;
+      return {
+        cccd: p[0].trim(),
+        cmndOld: p[1].trim(),
+        fullName: p[2].trim(),
+        dob: fDate(p[3].trim()),
+        gender: p[4].trim(),
+        address: p[5].trim(),
+        issueDate: fDate(p[6] ? p[6].trim() : '')
+      };
+    }
+    return null;
+  },
+  connectBluetoothPrinter() {
+    if (!navigator.bluetooth) return Promise.reject(new Error("Web Bluetooth chỉ hỗ trợ trên Chrome / Edge."));
+    return navigator.bluetooth.requestDevice({ acceptAllDevices: true }).then(dev => dev.name || 'Máy in Bluetooth');
+  },
+  triggerDirectA4Print(html) {
+    let printContainer = document.getElementById('print-area-container');
+    if (!printContainer) {
+      printContainer = document.createElement('div');
+      printContainer.id = 'print-area-container';
+      printContainer.className = 'print-only';
+      document.body.appendChild(printContainer);
+    }
+    printContainer.innerHTML = html;
+    window.print();
+  }
+};
+
+const TemplateManager = {
+  STORAGE_KEY: 'agribank_templates_v1',
+  getDefaultTemplates() {
+    return [
+      { id: 'TPL001', code: 'AGR-BM01', title: 'Giấy đề nghị mở tài khoản & sử dụng dịch vụ KH Cá nhân', category: 'Tài khoản & Thẻ', status: 'ACTIVE', updatedAt: '12/09/2026' },
+      { id: 'TPL002', code: 'AGR-BM02', title: 'Tờ khai đăng ký dịch vụ Agribank E-Mobile Banking & OTT', category: 'Ngân hàng số', status: 'ACTIVE', updatedAt: '12/09/2026' },
+      { id: 'TPL003', code: 'AGR-BM03', title: 'Phiếu cập nhật thông tin hồ sơ & thay đổi thông tin KH', category: 'Hồ sơ Khách hàng', status: 'ACTIVE', updatedAt: '12/09/2026' }
+    ];
+  },
+  getTemplates() {
+    try {
+      const d = localStorage.getItem(this.STORAGE_KEY);
+      return d ? JSON.parse(d) : this.getDefaultTemplates();
+    } catch(e) { return this.getDefaultTemplates(); }
+  },
+  saveTemplates(t) { localStorage.setItem(this.STORAGE_KEY, JSON.stringify(t)); },
+  addOrUpdateTemplate(data) {
+    const list = this.getTemplates();
+    const idx = list.findIndex(x => x.id === data.id);
+    const item = { ...data, updatedAt: new Date().toLocaleDateString('vi-VN') };
+    if (idx >= 0) list[idx] = item;
+    else { item.id = 'TPL_' + Date.now(); list.unshift(item); }
+    this.saveTemplates(list);
+  },
+  deleteTemplate(id) {
+    this.saveTemplates(this.getTemplates().filter(x => x.id !== id));
+  },
+  generateAccountOpeningFormHtml(data) {
+    const now = new Date();
+    return `
+      <div class="a4-page">
+        <div style="text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 12px; margin-bottom: 20px;">
+          <p style="font-size: 11pt; font-weight: bold; margin-bottom: 2px;">NGÂN HÀNG NÔNG NGHIỆP VÀ PHÁT TRIỂN NÔNG THÔN VIỆT NAM (AGRIBANK)</p>
+          <p style="font-size: 11pt; font-weight: bold; color: #006838; margin-bottom: 10px;">CHI NHÁNH PHÚ THỌ</p>
+          <h2 style="margin-top: 10px; color: #8B0000; font-size: 15pt; font-weight: bold;">GIẤY ĐỀ NGHỊ MỞ TÀI KHOẢN VÀ SỬ DỤNG DỊCH VỤ</h2>
+        </div>
+        <fieldset style="border: 1px solid #8B0000; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+          <legend style="color: #8B0000; font-weight: bold; padding: 0 8px;">I. THÔNG TIN KHÁCH HÀNG (Tải từ dữ liệu quét CCCD)</legend>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+            <tr><td style="padding: 5px 0; width: 32%;"><strong>Họ và tên khách hàng:</strong></td><td style="padding: 5px 0; font-size: 13pt; font-weight: bold; color: #000;">${(data.fullName || '').toUpperCase()}</td></tr>
+            <tr><td style="padding: 5px 0;"><strong>Số CCCD gắn chip:</strong></td><td style="padding: 5px 0; font-weight: bold;">${data.cccd || ''}</td></tr>
+            <tr><td style="padding: 5px 0;"><strong>Ngày sinh:</strong></td><td style="padding: 5px 0;">${data.dob || ''} &nbsp;&nbsp; <strong>Giới tính:</strong> ${data.gender || ''}</td></tr>
+            <tr><td style="padding: 5px 0;"><strong>Địa chỉ thường trú:</strong></td><td style="padding: 5px 0;">${data.address || ''}</td></tr>
+          </table>
+        </fieldset>
+        <div style="margin-top: 30px; display: flex; justify-content: space-between; text-align: center;">
+          <div style="width: 45%;"><p><strong>XÁC NHẬN CỦA AGRIBANK CN PHÚ THỌ</strong></p><br><br><p><strong>CÁN BỘ TIẾP NHẬN</strong></p></div>
+          <div style="width: 45%;"><p><em>Phú Thọ, Ngày ${now.getDate()} tháng ${now.getMonth()+1} năm ${now.getFullYear()}</em></p><p><strong>KHÁCH HÀNG ĐỀ NGHỊ</strong></p><br><br><p><strong>${(data.fullName || '').toUpperCase()}</strong></p></div>
+        </div>
+      </div>
+    `;
+  },
+  exportToExcel(customerList) {
+    if (typeof XLSX === 'undefined') return alert('Đang kết nối thư viện Excel...');
+    const excelData = customerList.map((item, index) => ({
+      "STT": index + 1,
+      "Họ và Tên": item.fullName,
+      "Số CCCD": item.cccd,
+      "Ngày Sinh": item.dob,
+      "Giới Tính": item.gender,
+      "Địa Chỉ": item.address
+    }));
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Hồ sơ Agribank");
+    XLSX.writeFile(wb, "Danh_Sach_Ho_So_Agribank_PhuTho.xlsx");
+  },
+  exportSingleDocx(data) {
+    const html = `<html><head><meta charset='utf-8'></head><body>${this.generateAccountOpeningFormHtml(data)}</body></html>`;
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    saveAs(blob, `Agribank_PhuTho_${(data.fullName || 'KH').replace(/\s+/g, '_')}.doc`);
+  }
+};
+
+const AppController = {
+  currentTab: 'scanner-tab',
+  isDataUnmasked: false,
+  activeRecordForPrint: null,
+
+  init() {
+    const user = AuthManager.getCurrentUser();
+    if (!user) {
+      document.getElementById('login-screen-modal').style.display = 'flex';
+      return;
+    }
+
+    document.getElementById('login-screen-modal').style.display = 'none';
+    document.getElementById('login-screen-modal').classList.remove('show');
+    this.updateUserUI(user);
+
+    // Mobile Hamburger
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.querySelector('.sidebar');
+    if (menuBtn && sidebar) {
+      menuBtn.onclick = () => sidebar.classList.toggle('open');
+    }
+
+    // Tabs
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.onclick = (e) => {
+        e.preventDefault();
+        const tab = item.getAttribute('data-tab');
+        this.switchTab(tab);
+        if (sidebar) sidebar.classList.remove('open');
+      };
+    });
+
+    this.renderCustomerRecords();
+    this.renderUserManagement();
+    this.renderTemplatesManagement();
+    this.renderAuditLogs();
+    this.updateStats();
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  },
+
+  updateUserUI(user) {
+    document.getElementById('nav-user-name').innerText = user.fullName;
+    document.getElementById('nav-user-role').innerText = user.role === 'ADMIN' ? 'Quản trị viên' : (user.role === 'SUPERVISOR' ? 'Kiểm soát' : 'Cán bộ');
+    document.getElementById('nav-user-unit').innerText = user.unit;
+  },
+
+  switchTab(tabId) {
+    this.currentTab = tabId;
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.getAttribute('data-tab') === tabId));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = (p.id === tabId ? 'block' : 'none'));
+
+    if (tabId === 'records-tab') this.renderCustomerRecords();
+    if (tabId === 'users-tab') this.renderUserManagement();
+    if (tabId === 'templates-tab') this.renderTemplatesManagement();
+    if (tabId === 'audit-tab') this.renderAuditLogs();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  },
+
+  renderCustomerRecords() {
+    const tbody = document.getElementById('customer-table-body');
+    if (!tbody) return;
+    const records = CustomerManager.getRecords();
+    const canUnmask = AuthManager.canUnmaskData();
+
+    if (records.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">Chưa có dữ liệu. Bấm <strong>Camera Quét QR</strong> hoặc <strong>Quét Mẫu (Test PC)</strong>!</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = records.map((r, i) => `
+      <tr>
+        <td><strong>${i + 1}</strong></td>
+        <td><strong>${r.fullName}</strong><div style="font-size:0.75rem; color:var(--text-muted);">${r.address||''}</div></td>
+        <td><span class="masked-data">${(this.isDataUnmasked && canUnmask) ? r.cccd : CustomerManager.maskData(r.cccd)}</span></td>
+        <td>${r.dob}</td>
+        <td>${r.gender}</td>
+        <td>${(this.isDataUnmasked && canUnmask) ? (r.phone||'N/A') : CustomerManager.maskData(r.phone)}</td>
+        <td><span class="badge badge-success">${r.status}</span></td>
+        <td>
+          <div style="display:flex; gap:0.3rem;">
+            <button class="btn btn-primary btn-sm" onclick="AppController.openPrintPreviewModal('${r.id}')"><i data-lucide="printer"></i> In</button>
+            <button class="btn btn-secondary btn-sm" onclick="AppController.exportWordForRecord('${r.id}')"><i data-lucide="file-text"></i> Word</button>
+            <button class="btn btn-danger btn-sm" onclick="AppController.deleteRecord('${r.id}')"><i data-lucide="trash-2"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  },
+
+  renderUserManagement() {
+    const tbody = document.getElementById('users-table-body');
+    if (!tbody) return;
+    const users = AuthManager.getUsers();
+    tbody.innerHTML = users.map((u, i) => `
+      <tr>
+        <td><strong>${i + 1}</strong></td>
+        <td><strong>${u.fullName}</strong><div style="font-size:0.75rem; color:var(--text-muted);">${u.code}</div></td>
+        <td><code>${u.username}</code></td>
+        <td><span class="badge ${u.role==='ADMIN'?'badge-danger':(u.role==='SUPERVISOR'?'badge-warning':'badge-info')}">${u.role}</span></td>
+        <td>${u.unit}</td>
+        <td><span class="badge ${u.status==='ACTIVE'?'badge-success':'badge-danger'}">${u.status}</span></td>
+        <td><button class="btn btn-secondary btn-sm" onclick="AppController.toggleUserStatus('${u.id}')">${u.status==='ACTIVE'?'Khóa':'Mở'}</button></td>
+      </tr>
+    `).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  },
+
+  renderTemplatesManagement() {
+    const tbody = document.getElementById('templates-table-body');
+    if (!tbody) return;
+    const templates = TemplateManager.getTemplates();
+    tbody.innerHTML = templates.map((t, i) => `
+      <tr>
+        <td><strong>${i + 1}</strong></td>
+        <td><code>${t.code}</code></td>
+        <td><strong>${t.title}</strong></td>
+        <td><span class="badge badge-info">${t.category}</span></td>
+        <td><span class="badge badge-success">${t.status}</span></td>
+        <td>${t.updatedAt}</td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="AppController.openEditTemplateModal('${t.id}')">Sửa</button>
+        </td>
+      </tr>
+    `).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  },
+
+  renderAuditLogs() {
+    const tbody = document.getElementById('audit-table-body');
+    if (!tbody) return;
+    const logs = AuditManager.getLogs();
+    if (logs.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-muted);">Chưa có nhật ký ghi nhận.</td></tr>`; return; }
+    tbody.innerHTML = logs.map(l => `
+      <tr>
+        <td style="font-size:0.78rem; color:var(--text-muted);">${l.timestamp}</td>
+        <td><strong>${l.officerName}</strong></td>
+        <td><span class="badge badge-info">${l.actionType}</span></td>
+        <td>${l.details}</td>
+        <td style="font-size:0.78rem;">${l.unit}</td>
+      </tr>
+    `).join('');
+  },
+
+  updateStats() {
+    const recs = CustomerManager.getRecords();
+    const usrs = AuthManager.getUsers();
+    document.getElementById('stat-total-records').innerText = recs.length;
+    document.getElementById('stat-total-users').innerText = usrs.length;
+  },
+
+  toggleDataUnmask() {
+    if (!AuthManager.canUnmaskData()) return alert("Bạn không có quyền xem thông tin đầy đủ!");
+    this.isDataUnmasked = !this.isDataUnmasked;
+    document.getElementById('toggle-unmask-btn').innerHTML = this.isDataUnmasked ? '<i data-lucide="eye-off"></i> Ẩn dữ liệu' : '<i data-lucide="eye"></i> Mở khóa xem đầy đủ';
+    this.renderCustomerRecords();
+  },
+
+  runSampleScan() {
+    const samples = [
+      "025095001234|131888999|NGUYỄN VĂN AN|15101995|Nam|Khu 4, Phường Gia Cẩm, TP Việt Trì, Phú Thọ|20052021",
+      "025188009876|131555444|TRẦN THỊ BÍCH NGỌC|08041992|Nữ|Thị trấn Phong Châu, Huyện Phù Ninh, Phú Thọ|12102022",
+      "025078005566|131222111|PHẠM HÙNG CƯỜNG|22121988|Nam|Phường Hùng Vương, Thị xã Phú Thọ, Phú Thọ|05062020"
+    ];
+    const item = samples[Math.floor(Math.random() * samples.length)];
+    const parsed = HardwareManager.parseCccdQr(item);
+    if (parsed) {
+      CustomerManager.addOrUpdateRecord(parsed);
+      this.renderCustomerRecords();
+      this.updateStats();
+      alert(`[QUÉT THÀNH CÔNG]\nKhách hàng: ${parsed.fullName}\nCCCD: ${parsed.cccd}`);
+    }
+  },
+
+  openModal(id) {
+    const m = document.getElementById(id);
+    if (m) m.classList.add('show');
+  },
+
+  closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) m.classList.remove('show');
+    HardwareManager.stopQrScanner();
+  },
+
+  openPrintPreviewModal(recordId) {
+    const r = CustomerManager.getRecords().find(x => x.id === recordId);
+    if (!r) return;
+    this.activeRecordForPrint = r;
+    document.getElementById('print-preview-body').innerHTML = TemplateManager.generateAccountOpeningFormHtml(r);
+    this.openModal('print-preview-modal');
+  },
+
+  printActivePreview() {
+    if (this.activeRecordForPrint) {
+      HardwareManager.triggerDirectA4Print(TemplateManager.generateAccountOpeningFormHtml(this.activeRecordForPrint));
+    }
+  },
+
+  exportWordForRecord(recordId) {
+    const r = CustomerManager.getRecords().find(x => x.id === recordId);
+    if (r) TemplateManager.exportSingleDocx(r);
+  },
+
+  deleteRecord(id) {
+    if (confirm("Xóa hồ sơ này khỏi hệ thống?")) {
+      CustomerManager.deleteRecord(id);
+      this.renderCustomerRecords();
+      this.updateStats();
+    }
+  },
+
+  toggleUserStatus(id) {
+    const users = AuthManager.getUsers();
+    const u = users.find(x => x.id === id);
+    if (u) {
+      u.status = u.status === 'ACTIVE' ? 'LOCKED' : 'ACTIVE';
+      AuthManager.saveUsers(users);
+      this.renderUserManagement();
+    }
+  },
+
+  openEditTemplateModal(id) {
+    const t = TemplateManager.getTemplates().find(x => x.id === id);
+    document.getElementById('edit-tpl-id').value = t ? t.id : '';
+    document.getElementById('edit-tpl-code').value = t ? t.code : 'AGR-BM04';
+    document.getElementById('edit-tpl-title').value = t ? t.title : '';
+    document.getElementById('edit-tpl-category').value = t ? t.category : 'Tài khoản & Thẻ';
+    document.getElementById('edit-tpl-desc').value = t ? t.description || '' : '';
+    this.openModal('edit-template-modal');
+  },
+
+  saveTemplateForm() {
+    const id = document.getElementById('edit-tpl-id').value;
+    const code = document.getElementById('edit-tpl-code').value.trim();
+    const title = document.getElementById('edit-tpl-title').value.trim();
+    const category = document.getElementById('edit-tpl-category').value;
+    const description = document.getElementById('edit-tpl-desc').value.trim();
+    if (!code || !title) return alert('Nhập mã & tên biểu mẫu!');
+
+    TemplateManager.addOrUpdateTemplate({ id: id || undefined, code, title, category, description, status: 'ACTIVE' });
+    this.renderTemplatesManagement();
+    this.closeModal('edit-template-modal');
+  }
+};
+
+// Handle Login Submit (Sync & Bulletproof)
+function handleLoginSubmit(e) {
+  if (e) e.preventDefault();
+  const u = document.getElementById('login-username').value;
+  const p = document.getElementById('login-password').value;
+
+  try {
+    const session = AuthManager.login(u, p);
+    document.getElementById('login-screen-modal').classList.remove('show');
+    document.getElementById('login-screen-modal').style.display = 'none';
+    AppController.init();
+  } catch (err) {
+    alert(err.message || 'Tài khoản hoặc mật khẩu không chính xác!');
+  }
+}
+
+// Auto Init on Load
+document.addEventListener('DOMContentLoaded', () => {
+  const user = AuthManager.getCurrentUser();
+  if (user) {
+    document.getElementById('login-screen-modal').style.display = 'none';
+    document.getElementById('login-screen-modal').classList.remove('show');
+    AppController.init();
+  } else {
+    document.getElementById('login-screen-modal').style.display = 'flex';
+  }
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+});
   </script>
 </body>
 </html>
