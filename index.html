@@ -395,7 +395,7 @@ body {
   border-collapse: collapse;
   text-align: left;
   font-size: 0.88rem;
-  min-width: 600px;
+  min-width: 650px;
 }
 
 .data-table th {
@@ -582,7 +582,7 @@ body {
 
       <div class="sidebar-heading" style="margin-top: 1rem;">Quản trị Biểu mẫu & Hệ thống</div>
       <a href="#" class="nav-item" data-tab="templates-tab">
-        <i data-lucide="file-cog"></i> Danh mục Biểu mẫu
+        <i data-lucide="file-cog"></i> Danh mục Biểu mẫu Chuẩn
       </a>
       <a href="#" class="nav-item" data-tab="users-tab">
         <i data-lucide="users"></i> Quản trị Người dùng
@@ -648,7 +648,7 @@ body {
           </div>
 
           <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button class="btn btn-primary" onclick="AppController.openModal('camera-scan-modal'); HardwareManager.startQrScanner('qr-reader-viewport', (data) => { CustomerManager.addOrUpdateRecord(data); AppController.renderCustomerRecords(); AppController.updateStats(); alert('Đã quét thành công CCCD: ' + data.fullName); AppController.closeModal('camera-scan-modal'); });">
+            <button class="btn btn-primary" onclick="AppController.openModal('camera-scan-modal'); HardwareManager.startQrScanner('qr-reader-viewport', (data) => { CustomerManager.addOrUpdateRecord(data); AppController.renderCustomerRecords(); AppController.updateStats(); alert('Đã bóc tách tự động dữ liệu CCCD: ' + data.fullName); AppController.closeModal('camera-scan-modal'); });">
               <i data-lucide="camera"></i> Camera Quét QR CCCD
             </button>
 
@@ -673,7 +673,7 @@ body {
         <!-- Quick Records Preview Panel -->
         <div class="glass-panel">
           <div class="panel-header">
-            <div class="panel-title"><i data-lucide="history"></i> Hồ sơ vừa tiếp nhận mới nhất</div>
+            <div class="panel-title"><i data-lucide="history"></i> Danh sách Hồ sơ & Chọn Mẫu Biểu Cần In</div>
             <button class="btn btn-secondary btn-sm" id="toggle-unmask-btn" onclick="AppController.toggleDataUnmask()">
               <i data-lucide="eye"></i> Mở khóa xem đầy đủ
             </button>
@@ -684,17 +684,15 @@ body {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Họ và Tên Khách hàng</th>
+                  <th>Họ và Tên KH</th>
                   <th>Số CCCD gắn chip</th>
-                  <th>Ngày sinh</th>
-                  <th>Giới tính</th>
-                  <th>Số Điện Thoại</th>
-                  <th>Trạng Thái</th>
+                  <th>SĐT chính chủ</th>
+                  <th>Chọn Mẫu Biểu Cần In / Xuất</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody id="customer-table-body">
-                <!-- Dynamically Rendered -->
+                <!-- Dynamically Rendered with Template Selector -->
               </tbody>
             </table>
           </div>
@@ -713,24 +711,24 @@ body {
         </div>
       </section>
 
-      <!-- TAB 3: ADMIN TEMPLATES MANAGEMENT -->
+      <!-- TAB 3: ADMIN TEMPLATES MANAGEMENT (BATCH UPLOAD & OFFICIAL TEMPLATES) -->
       <section id="templates-tab" class="tab-panel" style="display: none;">
         <div class="glass-panel">
           <div class="panel-header">
-            <div class="panel-title"><i data-lucide="file-cog"></i> Quản lý Danh mục Mẫu Biểu Hồ sơ Agribank</div>
-            <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-gold btn-sm" onclick="document.getElementById('upload-tpl-file').click()">
-                <i data-lucide="upload"></i> Upload Mẫu Word (.docx / .doc)
+            <div class="panel-title"><i data-lucide="file-cog"></i> Quản lý Danh mục Mẫu Biểu Chuẩn Agribank</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-gold btn-sm" onclick="document.getElementById('upload-tpl-batch-file').click()">
+                <i data-lucide="upload-cloud"></i> Push Đẩy Mẫu Theo Lô (.doc / .docx)
               </button>
-              <input type="file" id="upload-tpl-file" accept=".doc,.docx" style="display: none;" onchange="AppController.handleWordTemplateUpload(this)">
-              
+              <input type="file" id="upload-tpl-batch-file" accept=".doc,.docx" multiple style="display: none;" onchange="AppController.handleBatchWordTemplateUpload(this)">
+
               <button class="btn btn-primary btn-sm" onclick="AppController.openEditTemplateModal()">
                 <i data-lucide="file-plus"></i> Thêm Mẫu Biểu Mới
               </button>
             </div>
           </div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
-            Quản trị viên (Admin) có thể tải lên mẫu biểu Word mới (như Mẫu 1A/DVTK-CN Agribank) để thay đổi biểu mẫu khi có quy định mới.
+            Hệ thống tự động nhận diện các vị trí trống trên mẫu biểu Word (`Mẫu 1A/DVTK-CN`, `Tờ khai E-Mobile Banking`...) để điền tự động dữ liệu CCCD vào vị trí tương ứng.
           </p>
 
           <div class="table-responsive">
@@ -739,7 +737,7 @@ body {
                 <tr>
                   <th>STT</th>
                   <th>Mã Biểu Mẫu</th>
-                  <th>Tên Biểu Mẫu Hồ Sơ</th>
+                  <th>Tên Biểu Mẫu Hồ Sơ Chuẩn</th>
                   <th>Phân Loại</th>
                   <th>Trạng Thái</th>
                   <th>Cập Nhật Lần Cuối</th>
@@ -747,7 +745,7 @@ body {
                 </tr>
               </thead>
               <tbody id="templates-table-body">
-                <!-- Dynamically Rendered -->
+                <!-- Dynamically Rendered Clean Official Templates -->
               </tbody>
             </table>
           </div>
@@ -1021,7 +1019,7 @@ body {
   <div id="print-preview-modal" class="modal-backdrop">
     <div class="modal-content" style="max-width: 850px;">
       <div class="modal-header">
-        <h3><i data-lucide="printer"></i> Xem Trước Biểu Mẫu Agribank 1A/DVTK-CN</h3>
+        <h3><i data-lucide="printer"></i> Xem Trước & In Biểu Mẫu Được Chọn</h3>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <button class="btn btn-green btn-sm" onclick="AppController.exportWordForRecord(AppController.activeRecordForPrint ? AppController.activeRecordForPrint.id : null)">
             <i data-lucide="file-text"></i> Tải File Word
@@ -1173,6 +1171,7 @@ const CustomerManager = {
       ...data,
       phone: data.phone || '',
       cif: data.cif || '',
+      selectedTemplateCode: data.selectedTemplateCode || 'Mẫu 1A/DVTK-CN',
       status: data.status || 'Đã tạo hồ sơ 1A',
       updatedAt: new Date().toLocaleString('vi-VN'),
       officerName: user ? user.fullName : 'Cán bộ Agribank'
@@ -1197,7 +1196,6 @@ const CustomerManager = {
 const HardwareManager = {
   html5QrCodeScanner: null,
 
-  // RELIABLE CAMERA QR SCANNER FOR ALL MOBILE DEVICES
   startQrScanner(elementId, callback) {
     if (typeof Html5Qrcode === 'undefined') return alert('Đang kết nối thư viện QR...');
     if (this.html5QrCodeScanner) this.stopQrScanner();
@@ -1205,7 +1203,6 @@ const HardwareManager = {
     this.html5QrCodeScanner = new Html5Qrcode(elementId);
     const config = { fps: 15, qrbox: { width: 250, height: 250 } };
 
-    // Start with environment camera
     this.html5QrCodeScanner.start(
       { facingMode: "environment" },
       config,
@@ -1214,8 +1211,7 @@ const HardwareManager = {
         if (parsed && callback) callback(parsed);
       },
       () => {}
-    ).catch(err => {
-      console.warn("Front camera fallback...", err);
+    ).catch(() => {
       this.html5QrCodeScanner.start({ facingMode: "user" }, config, (text) => {
         const parsed = this.parseCccdQr(text);
         if (parsed && callback) callback(parsed);
@@ -1290,33 +1286,98 @@ const HardwareManager = {
 
 const TemplateManager = {
   STORAGE_KEY: 'agribank_templates_v1',
+
+  // CLEAN OFFICIAL AGRIBANK TEMPLATES LIST ONLY
   getDefaultTemplates() {
     return [
-      { id: 'TPL001', code: 'Mẫu 1A/DVTK-CN', title: 'Đăng ký thông tin KH, đề nghị mở, sử dụng TK thanh toán và dịch vụ', category: 'Tài khoản & Thẻ', status: 'ACTIVE', updatedAt: '12/09/2026' },
-      { id: 'TPL002', code: 'AGR-BM02', title: 'Tờ khai đăng ký dịch vụ Agribank E-Mobile Banking & OTT', category: 'Ngân hàng số', status: 'ACTIVE', updatedAt: '12/09/2026' },
-      { id: 'TPL003', code: 'AGR-BM03', title: 'Phiếu cập nhật thông tin hồ sơ & thay đổi thông tin KH', category: 'Hồ sơ Khách hàng', status: 'ACTIVE', updatedAt: '12/09/2026' }
+      { id: 'TPL001', code: 'Mẫu 1A/DVTK-CN', title: 'Đăng ký thông tin KH, đề nghị mở, sử dụng TKTT và dịch vụ Agribank', category: 'Biểu Mẫu Chuẩn', status: 'ACTIVE', updatedAt: new Date().toLocaleDateString('vi-VN') },
+      { id: 'TPL002', code: 'AGR-BM02', title: 'Tờ khai đăng ký dịch vụ Agribank Plus / Mobile Banking & OTT', category: 'Ngân hàng số', status: 'ACTIVE', updatedAt: new Date().toLocaleDateString('vi-VN') },
+      { id: 'TPL003', code: 'AGR-BM03', title: 'Phiếu cập nhật thông tin hồ sơ & thay đổi thông tin KH', category: 'Hồ sơ Khách hàng', status: 'ACTIVE', updatedAt: new Date().toLocaleDateString('vi-VN') }
     ];
   },
+
   getTemplates() {
     try {
       const d = localStorage.getItem(this.STORAGE_KEY);
       return d ? JSON.parse(d) : this.getDefaultTemplates();
     } catch(e) { return this.getDefaultTemplates(); }
   },
+
   saveTemplates(t) { localStorage.setItem(this.STORAGE_KEY, JSON.stringify(t)); },
+
   addOrUpdateTemplate(data) {
     const list = this.getTemplates();
-    const idx = list.findIndex(x => x.id === data.id);
+    const idx = list.findIndex(x => x.id === data.id || x.code === data.code);
     const item = { ...data, updatedAt: new Date().toLocaleDateString('vi-VN') };
     if (idx >= 0) list[idx] = item;
     else { item.id = 'TPL_' + Date.now(); list.unshift(item); }
     this.saveTemplates(list);
   },
+
   deleteTemplate(id) { this.saveTemplates(this.getTemplates().filter(x => x.id !== id)); },
 
-  // OFFICIAL AGRIBANK MẪU 1A/DVTK-CN FORM GENERATOR (MATCHING IMAGE 2 EXACTLY)
-  generateAccountOpeningFormHtml(data) {
+  // AUTOMATIC PLACEHOLDER FILLING ENGINE (FILLS BLANK UNDERLINES AND TAGS AUTOMATICALLY)
+  fillPlaceholders(templateText, data) {
+    if (!templateText) return '';
+    let result = templateText;
+
+    const replacements = {
+      '{{HO_TEN}}': (data.fullName || '').toUpperCase(),
+      '{{SO_CCCD}}': data.cccd || '',
+      '{{CMND_CU}}': data.cmndOld || 'Không có',
+      '{{NGAY_SINH}}': data.dob || '',
+      '{{GIOI_TINH}}': data.gender || '',
+      '{{DIA_CHI}}': data.address || '',
+      '{{SO_DIEN_THOAI}}': data.phone || '',
+      '{{SO_CIF}}': data.cif || '',
+      '{{NGAY_CAP}}': data.issueDate || ''
+    };
+
+    for (const [key, val] of Object.entries(replacements)) {
+      result = result.replaceAll(key, val);
+    }
+    return result;
+  },
+
+  // OFFICIAL AGRIBANK MẪU 1A/DVTK-CN FORM GENERATOR (MATCHES USER'S Mau1A.doc)
+  generateAccountOpeningFormHtml(data, templateCode = 'Mẫu 1A/DVTK-CN') {
     const now = new Date();
+
+    if (templateCode === 'AGR-BM02') {
+      return `
+        <div class="a4-page" style="font-family:'Times New Roman', serif; color:#000; padding:15px; background:#fff;">
+          <div style="text-align:center; border-bottom:2px solid #006838; padding-bottom:10px; margin-bottom:15px;">
+            <h2 style="color:#006838;">AGRIBANK CHI NHÁNH PHÚ THỌ</h2>
+            <h3 style="margin-top:5px;">TỜ KHAI ĐĂNG KÝ DỊCH VỤ AGRIBANK PLUS & SMS BANKING</h3>
+          </div>
+          <p><strong>Họ và tên KH:</strong> ${(data.fullName || '').toUpperCase()}</p>
+          <p><strong>Số CCCD:</strong> ${data.cccd || ''}</p>
+          <p><strong>Số Điện thoại đăng ký:</strong> ${data.phone || 'Chưa nhập'}</p>
+          <p><strong>Địa chỉ:</strong> ${data.address || ''}</p>
+          <p style="margin-top:20px;">☑ Đăng ký dịch vụ Ngân hàng số Agribank Plus</p>
+          <p>☑ Đăng ký nhận thông báo biến động số dư qua OTT Alert / SMS Banking</p>
+        </div>
+      `;
+    }
+
+    if (templateCode === 'AGR-BM03') {
+      return `
+        <div class="a4-page" style="font-family:'Times New Roman', serif; color:#000; padding:15px; background:#fff;">
+          <div style="text-align:center; border-bottom:2px solid #8B0000; padding-bottom:10px; margin-bottom:15px;">
+            <h2 style="color:#8B0000;">AGRIBANK CHI NHÁNH PHÚ THỌ</h2>
+            <h3 style="margin-top:5px;">PHIẾU CẬP NHẬT THÔNG TIN HỒ SƠ KHÁCH HÀNG</h3>
+          </div>
+          <p><strong>Khách hàng:</strong> ${(data.fullName || '').toUpperCase()}</p>
+          <p><strong>Số CCCD mới:</strong> ${data.cccd || ''}</p>
+          <p><strong>Số CMND cũ:</strong> ${data.cmndOld || 'Không có'}</p>
+          <p><strong>Ngày sinh:</strong> ${data.dob || ''} &nbsp;&nbsp;&nbsp; <strong>Giới tính:</strong> ${data.gender || ''}</p>
+          <p><strong>Địa chỉ thường trú:</strong> ${data.address || ''}</p>
+          <p><strong>SĐT cập nhật:</strong> ${data.phone || ''}</p>
+        </div>
+      `;
+    }
+
+    // Default Mẫu 1A/DVTK-CN
     return `
       <div class="a4-page" style="font-family: 'Times New Roman', serif; color: #000; line-height: 1.4; padding: 15px; background: #fff;">
         
@@ -1432,12 +1493,12 @@ const TemplateManager = {
   },
 
   // MOBILE-FRIENDLY & CORRUPTION-FREE WORD (.DOC) EXPORT ENGINE
-  exportSingleDocx(data) {
+  exportSingleDocx(data, templateCode = 'Mẫu 1A/DVTK-CN') {
     const htmlContent = `<!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Agribank Mau 1A DVTK-CN</title>
+  <title>Agribank ${templateCode}</title>
   <!--[if gte mso 9]>
   <xml>
     <w:WordDocument>
@@ -1455,16 +1516,15 @@ const TemplateManager = {
   </style>
 </head>
 <body>
-  ${this.generateAccountOpeningFormHtml(data)}
+  ${this.generateAccountOpeningFormHtml(data, templateCode)}
 </body>
 </html>`;
 
-    // Write with explicit UTF-8 BOM byte array so mobile MS Word & Google Docs open cleanly
     const blob = new Blob(['\ufeff', htmlContent], {
       type: 'application/msword;charset=utf-8'
     });
 
-    const fileName = `Agribank_Mau1A_${(data.fullName || 'KH').replace(/\s+/g, '_')}_${data.cccd || ''}.doc`;
+    const fileName = `Agribank_${templateCode.replace(/[^a-zA-Z0-9]/g, '_')}_${(data.fullName || 'KH').replace(/\s+/g, '_')}_${data.cccd || ''}.doc`;
     saveAs(blob, fileName);
   }
 };
@@ -1529,43 +1589,63 @@ const AppController = {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   },
 
+  // RENDER CUSTOMER RECORDS TABLE WITH TEMPLATE SELECTOR FOR EACH CUSTOMER
   renderCustomerRecords() {
     const tbody = document.getElementById('customer-table-body');
     if (!tbody) return;
     const records = CustomerManager.getRecords();
+    const templates = TemplateManager.getTemplates();
     const canUnmask = AuthManager.canUnmaskData();
 
     if (records.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">Chưa có dữ liệu. Bấm <strong>Camera Quét QR</strong> hoặc <strong>Thêm Thủ Công</strong>!</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">Chưa có dữ liệu. Bấm <strong>Camera Quét QR</strong> hoặc <strong>Thêm Thủ Công</strong>!</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = records.map((r, i) => `
-      <tr>
-        <td><strong>${i + 1}</strong></td>
-        <td>
-          <strong style="color:var(--text-primary); font-size:0.95rem;">${r.fullName}</strong>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${r.address||'Chưa nhập địa chỉ'}</div>
-        </td>
-        <td><span class="masked-data">${(this.isDataUnmasked && canUnmask) ? r.cccd : CustomerManager.maskData(r.cccd)}</span></td>
-        <td>${r.dob || '---'}</td>
-        <td>${r.gender || '---'}</td>
-        <td><strong style="color:var(--agri-gold);">${(this.isDataUnmasked && canUnmask) ? (r.phone||'Chưa nhập') : CustomerManager.maskData(r.phone)}</strong></td>
-        <td><span class="badge badge-success">${r.status || 'Đã tạo hồ sơ 1A'}</span></td>
-        <td>
-          <div style="display:flex; gap:0.3rem;">
-            <button class="btn btn-gold btn-sm" onclick="AppController.openEditCustomerModal('${r.id}')" title="Sửa SĐT / Địa chỉ"><i data-lucide="edit"></i> Sửa</button>
-            <button class="btn btn-primary btn-sm" onclick="AppController.openPrintPreviewModal('${r.id}')" title="Xem & In Hồ Sơ A4"><i data-lucide="printer"></i> In</button>
-            <button class="btn btn-green btn-sm" onclick="AppController.exportWordForRecord('${r.id}')" title="Tải file Word Mẫu 1A"><i data-lucide="file-text"></i> Word</button>
-            <button class="btn btn-danger btn-sm" onclick="AppController.deleteRecord('${r.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = records.map((r, i) => {
+      const activeTplCode = r.selectedTemplateCode || 'Mẫu 1A/DVTK-CN';
+
+      const templateOptionsHtml = templates.map(t => 
+        `<option value="${t.code}" ${t.code === activeTplCode ? 'selected' : ''}>${t.code} - ${t.title.substring(0, 30)}...</option>`
+      ).join('');
+
+      return `
+        <tr>
+          <td><strong>${i + 1}</strong></td>
+          <td>
+            <strong style="color:var(--text-primary); font-size:0.95rem;">${r.fullName}</strong>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${r.address||'Chưa nhập địa chỉ'}</div>
+          </td>
+          <td><span class="masked-data">${(this.isDataUnmasked && canUnmask) ? r.cccd : CustomerManager.maskData(r.cccd)}</span></td>
+          <td><strong style="color:var(--agri-gold);">${(this.isDataUnmasked && canUnmask) ? (r.phone||'Chưa nhập') : CustomerManager.maskData(r.phone)}</strong></td>
+          <td>
+            <select class="form-control form-control-sm" style="font-size:0.78rem; padding:0.3rem;" onchange="AppController.setSelectedTemplateForRecord('${r.id}', this.value)">
+              ${templateOptionsHtml}
+            </select>
+          </td>
+          <td>
+            <div style="display:flex; gap:0.3rem;">
+              <button class="btn btn-gold btn-sm" onclick="AppController.openEditCustomerModal('${r.id}')" title="Sửa SĐT / Địa chỉ"><i data-lucide="edit"></i> Sửa</button>
+              <button class="btn btn-primary btn-sm" onclick="AppController.openPrintPreviewModal('${r.id}')" title="Xem & In Hồ Sơ A4"><i data-lucide="printer"></i> In</button>
+              <button class="btn btn-green btn-sm" onclick="AppController.exportWordForRecord('${r.id}')" title="Tải file Word Mẫu chọn"><i data-lucide="file-text"></i> Word</button>
+              <button class="btn btn-danger btn-sm" onclick="AppController.deleteRecord('${r.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
     if (typeof lucide !== 'undefined') lucide.createIcons();
   },
 
-  // OPEN EDIT / ADD CUSTOMER MODAL (NHẬP SĐT, SỬA ĐỊA CHỈ, CIF, HỌ TÊN)
+  setSelectedTemplateForRecord(recordId, tplCode) {
+    const records = CustomerManager.getRecords();
+    const r = records.find(x => x.id === recordId);
+    if (r) {
+      r.selectedTemplateCode = tplCode;
+      CustomerManager.saveRecords(records);
+    }
+  },
+
   openEditCustomerModal(recordId) {
     const record = recordId ? CustomerManager.getRecords().find(x => x.id === recordId) : null;
 
@@ -1640,27 +1720,39 @@ const AppController = {
         <td>${t.updatedAt}</td>
         <td>
           <button class="btn btn-secondary btn-sm" onclick="AppController.openEditTemplateModal('${t.id}')">Sửa</button>
+          <button class="btn btn-danger btn-sm" onclick="AppController.deleteTemplate('${t.id}')">Xóa</button>
         </td>
       </tr>
     `).join('');
     if (typeof lucide !== 'undefined') lucide.createIcons();
   },
 
-  // UPLOAD CUSTOM WORD TEMPLATE FILE (ADMIN)
-  handleWordTemplateUpload(fileInput) {
+  // BATCH WORD TEMPLATE UPLOAD (UPLOAD ĐẨY MẪU THEO LÔ FOR ADMIN)
+  handleBatchWordTemplateUpload(fileInput) {
     if (!fileInput.files || fileInput.files.length === 0) return;
-    const file = fileInput.files[0];
+    const files = Array.from(fileInput.files);
 
-    TemplateManager.addOrUpdateTemplate({
-      code: 'Mẫu ' + file.name.substring(0, 10),
-      title: 'Mẫu Word Upload: ' + file.name,
-      category: 'Hồ sơ Tải lên',
-      description: 'Mẫu biểu Word tải lên từ file: ' + file.name,
-      status: 'ACTIVE'
+    files.forEach((file, index) => {
+      TemplateManager.addOrUpdateTemplate({
+        code: 'Lô-Mẫu-' + (index + 1),
+        title: 'Mẫu Word Lô: ' + file.name,
+        category: 'Mẫu Lô Tải Lên',
+        description: 'Mẫu biểu Word tải lên theo lô từ file: ' + file.name,
+        status: 'ACTIVE'
+      });
     });
 
     this.renderTemplatesManagement();
-    alert('ĐÃ TẢI LÊN MẪU BIỂU WORD THÀNH CÔNG:\n' + file.name);
+    this.renderCustomerRecords();
+    alert(`ĐÃ TẢI LÊN THÀNH CÔNG LÔ ${files.length} MẪU BIỂU WORD!`);
+  },
+
+  deleteTemplate(id) {
+    if (confirm("Xóa biểu mẫu này khỏi hệ thống?")) {
+      TemplateManager.deleteTemplate(id);
+      this.renderTemplatesManagement();
+      this.renderCustomerRecords();
+    }
   },
 
   renderAuditLogs() {
@@ -1724,21 +1816,24 @@ const AppController = {
     const r = CustomerManager.getRecords().find(x => x.id === recordId);
     if (!r) return;
     this.activeRecordForPrint = r;
-    document.getElementById('print-preview-body').innerHTML = TemplateManager.generateAccountOpeningFormHtml(r);
+    const tplCode = r.selectedTemplateCode || 'Mẫu 1A/DVTK-CN';
+    document.getElementById('print-preview-body').innerHTML = TemplateManager.generateAccountOpeningFormHtml(r, tplCode);
     this.openModal('print-preview-modal');
   },
 
   printActivePreview() {
     if (this.activeRecordForPrint) {
-      HardwareManager.triggerDirectA4Print(TemplateManager.generateAccountOpeningFormHtml(this.activeRecordForPrint));
+      const tplCode = this.activeRecordForPrint.selectedTemplateCode || 'Mẫu 1A/DVTK-CN';
+      HardwareManager.triggerDirectA4Print(TemplateManager.generateAccountOpeningFormHtml(this.activeRecordForPrint, tplCode));
     }
   },
 
   exportWordForRecord(recordId) {
     const r = CustomerManager.getRecords().find(x => x.id === recordId || (this.activeRecordForPrint && x.id === this.activeRecordForPrint.id));
     if (r) {
-      TemplateManager.exportSingleDocx(r);
-      alert('Đã tải xuống file hồ sơ Word Mẫu 1A/DVTK-CN!');
+      const tplCode = r.selectedTemplateCode || 'Mẫu 1A/DVTK-CN';
+      TemplateManager.exportSingleDocx(r, tplCode);
+      alert(`Đã tải xuống file hồ sơ Word [${tplCode}]!`);
     }
   },
 
@@ -1780,6 +1875,7 @@ const AppController = {
 
     TemplateManager.addOrUpdateTemplate({ id: id || undefined, code, title, category, description, status: 'ACTIVE' });
     this.renderTemplatesManagement();
+    this.renderCustomerRecords();
     this.closeModal('edit-template-modal');
   }
 };
